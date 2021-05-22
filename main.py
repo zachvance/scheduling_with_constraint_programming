@@ -24,6 +24,7 @@ the value of ALLOWABLE_OVERLAP (in minutes).
 jobs.
 
 TODO:
+    - Complete algorithm/get code working
     - Account for end times past midnight by adding +1 day to those
     instances (so they are sorted properly)
     - Convert times back to a more readable format, without the date
