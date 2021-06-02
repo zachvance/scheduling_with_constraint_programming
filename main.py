@@ -1,11 +1,9 @@
-#!/usr/bin/env python3
-
 """
 =======================================================================
-Greedy Schedule with Limits
+Scheduling with Constraint Programming
 =======================================================================
 
-A greedy scheduler with configurable constraints. It takes a CSV as
+A scheduler with configurable constraints. It takes a CSV as
 input. An example CSV is included in the repository.
 
 Guidelines for the algorithm:
@@ -14,7 +12,7 @@ Guidelines for the algorithm:
 TOTAL_VALUE_LIMIT (in hours). Note this should take into account the
 possibility of time overlaps, and in such situations values should be
 calculated by the difference between start and end times rather than
-using the value provided in the "Val" column from the input.
+using the value provided in the "Value" column from the input.
 
 - Any pairing of jobs' start and end times may overlap by at most
 the value of ALLOWABLE_OVERLAP (in minutes).
@@ -45,6 +43,8 @@ from pandas import (
 )
 from pandas.io.parsers import TextFileReader
 
+from classes import Job
+
 from config import (
     ALLOWABLE_OVERLAP,
     FILE_TO_READ,
@@ -55,16 +55,17 @@ from config import (
 
 df: pd.DataFrame = pd.read_csv(FILE_TO_READ, parse_dates=PARSE_DATES)
 
-df_start_times = df.filter(items=["Job", "Start"])
-df_end_times = df.filter(items=["Job", "End"])
+for x in df.index:
+    task = "task_" + str(df["Task"].iloc[x])
+    job = df["Job"].iloc[x]
+    start_time = df["Start"].iloc[x]
+    end_time = df["End"].iloc[x]
+    value = df["Value"].iloc[x]
+    priority = df["Priority"].iloc[x]
+    task = Job(job, start_time, end_time, value, priority)
+    print(task.job, task.start_time)
 
 overlap = datetime.timedelta(minutes=ALLOWABLE_OVERLAP)
-
-for start_time in df_start_times["Start"]:
-    if df_end_times.loc[df_end_times["End"]] < (start_time - overlap):
-        print("Yes")
-    else:
-        print("No")
 
 
 """df_end_times = df.filter(items=["Task", "End", "Priority"])
