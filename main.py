@@ -71,9 +71,15 @@ for x in list_of_jobs:
     else:
         print(0)
 
-# Testing a comparative loop; print matches of jobs if job start is later than job end.
+# Testing a comparative loop; print matches of jobs if job start is
+# later than job end and sum of job values is less than 13.
 for x in list_of_jobs:
     for y in list_of_jobs:
-        if x.start_time > y.end_time:
-            i = (y.job, y.end_time, x.job, x.start_time)
+        if x.start_time > (y.end_time - overlap) and x.value + y.value < 13:
+            i = (y.job, y.end_time, x.job, x.start_time, round(x.value + y.value, 2))
+            list_of_jobs.remove(y)
             print(i)
+
+# Print leftover jobs:
+for x in list_of_jobs:
+    print(x.job)
