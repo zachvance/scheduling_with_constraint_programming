@@ -31,55 +31,49 @@ TODO:
 """
 
 import datetime
-from typing import (
-    Any,
-    Union,
-)
+from typing import Any, Union
 
 import pandas as pd
-from pandas import (
-    DataFrame,
-    Series,
-)
+from pandas import DataFrame, Series
 from pandas.io.parsers import TextFileReader
 
 from classes import Job
-
 from config import (
     ALLOWABLE_OVERLAP,
     FILE_TO_READ,
-    TOTAL_VALUE_LIMIT,
-    PARSE_DATES,
     OUTPUT_FILE,
+    PARSE_DATES,
+    TOTAL_VALUE_LIMIT,
 )
 
 df: pd.DataFrame = pd.read_csv(FILE_TO_READ, parse_dates=PARSE_DATES)
+overlap = datetime.timedelta(minutes=ALLOWABLE_OVERLAP)
 
+# Create a list of Jobs with corresponding attributes from the data frame.
+list_of_jobs = []
 for x in df.index:
-    task = "task_" + str(df["Task"].iloc[x])
+    id = "task_" + str(df["Task"].iloc[x])
     job = df["Job"].iloc[x]
     start_time = df["Start"].iloc[x]
     end_time = df["End"].iloc[x]
     value = df["Value"].iloc[x]
     priority = df["Priority"].iloc[x]
-    task = Job(job, start_time, end_time, value, priority)
-    print(task.job, task.start_time)
+    list_of_jobs.append(Job(id, job, start_time, end_time, value, priority))
 
-overlap = datetime.timedelta(minutes=ALLOWABLE_OVERLAP)
+# Test calls
+print(list_of_jobs)
+print(list_of_jobs[0].job)
 
+# Testing a comparative loop in list; proof of concept.
+for x in list_of_jobs:
+    if x.job == "13301":
+        print(1)
+    else:
+        print(0)
 
-"""df_end_times = df.filter(items=["Task", "End", "Priority"])
-df_start_times = df.filter(items=["Task", "Start", "End", "Val", "Job"])
-
-def comparator(
-    start_time: pd.DataFrame,
-    end_times: pd.DataFrame = df_end_times,
-) -> "int64":
-    tasks = (end_times.loc[end_times["End"] < start_time]).sort_values(by="End").Task
-    if tasks.empty:
-        return float("nan")
-    return tasks.iloc[-1]
-
-
-df_start_times["Group"] = df_start_times["Start"].apply(comparator)
-df_start_times.to_csv(OUTPUT_FILE, index=False)"""
+# Testing a comparative loop; print matches of jobs if job start is later than job end.
+for x in list_of_jobs:
+    for y in list_of_jobs:
+        if x.start_time > y.end_time:
+            i = (y.job, y.end_time, x.job, x.start_time)
+            print(i)

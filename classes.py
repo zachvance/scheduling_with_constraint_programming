@@ -1,7 +1,8 @@
 
 
 class Job:
-    def __init__(self, job, start_time, end_time, value, priority):
+    def __init__(self, id, job, start_time, end_time, value, priority):
+        self.id = id
         self.job = job
         self.start_time = start_time
         self.end_time = end_time

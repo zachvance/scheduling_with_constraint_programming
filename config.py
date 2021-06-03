@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Configuration file for Greedy Schedule Algorithm global variables
 """
