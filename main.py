@@ -60,26 +60,47 @@ for x in df.index:
     priority = df["Priority"].iloc[x]
     list_of_jobs.append(Job(id, job, start_time, end_time, value, priority))
 
+#--------
+
 # Test calls
-print(list_of_jobs)
-print(list_of_jobs[0].job)
+"""print(list_of_jobs)
+print(list_of_jobs[0].job)"""
 
 # Testing a comparative loop in list; proof of concept.
-for x in list_of_jobs:
+"""for x in list_of_jobs:
     if x.job == "13301":
         print(1)
     else:
-        print(0)
+        print(0)"""
+
+#--------
 
 # Testing a comparative loop; print matches of jobs if job start is
 # later than job end and sum of job values is less than 13.
-for x in list_of_jobs:
+"""for x in list_of_jobs:
     for y in list_of_jobs:
         if x.start_time > (y.end_time - overlap) and x.value + y.value < 13:
             i = (y.job, y.end_time, x.job, x.start_time, round(x.value + y.value, 2))
             list_of_jobs.remove(y)
-            print(i)
+            print(i)"""
 
 # Print leftover jobs:
+"""for x in list_of_jobs:
+    print(x.job)"""
+
+#--------
+
+# Continuation of loop; adding the matches to a group to then compare
+# which match is the 'best' (whichever match has the least time gap
+# between start and end)
+group = []
 for x in list_of_jobs:
-    print(x.job)
+    for y in list_of_jobs:
+        if x.start_time > (y.end_time - overlap) and x.value + y.value < 13:
+            z = [y, x]
+            #list_of_jobs.remove(y)
+            group.append(z)
+
+# Print the number of minutes difference between start and end times of the pairs:
+for pair in group:
+    print(pair[0].job, pair[1].job, (pair[1].start_time - pair[0].end_time).seconds // 60)
