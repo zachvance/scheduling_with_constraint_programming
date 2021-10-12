@@ -14,10 +14,3 @@ the value of ALLOWABLE_OVERLAP (in minutes).
 - The output file should be identical to the input file, with an added
 "Group" column containing a value that matches between the grouped
 jobs.
-
-TODO:
-- Complete code
-- Account for end times past midnight by adding +1 day to those
-instances (so they are sorted properly)
-- Convert times back to a more readable format, without the date
-before writing to output file and console
