@@ -21,6 +21,14 @@ the value of ALLOWABLE_OVERLAP (in minutes).
 "Group" column containing a value that matches between the grouped
 jobs.
 
+Boolean questions for pseudocode and helping plan out the algorithm steps:
+
+- Do the jobs in the grouping have a time overlap? If so, adjust the total value
+  accordingly.
+- Do the jobs in the grouping have a total value less than the TOTAL_VALUE_LIMIT?
+- Do the jobs in the grouping have the least duration of 'dead time' between their end
+  and start times, compared with all other pairings that contain one of the two jobs?
+
 """
 
 from datetime import datetime, timedelta
@@ -40,7 +48,7 @@ from config import (ALLOWABLE_OVERLAP, FILE_TO_READ, OUTPUT_FILE,
 df: pd.DataFrame = pd.read_csv(FILE_TO_READ)
 overlap = timedelta(minutes=ALLOWABLE_OVERLAP)
 
-# Create a list of Jobs with corresponding attributes from the data frame.
+# Create a list of Job class instances with corresponding attributes from the dataframe.
 list_of_jobs = []
 
 for x in df.index:
@@ -138,10 +146,13 @@ for x in list_to_compare:
     values = [x[1], x[2]]
     dictionary_to_compare.setdefault(x[0], []).append(values)
 
-for key in dictionary_to_compare:
-    for x in dictionary_to_compare[key]:
-        print(key, x[1])
-    # print(key, dictionary_to_compare[key])
+def find_minimum(key, value_list):
+    return key, min(value_list, key=lambda lst: lst[1])
+
+def find_minimum_dict(dictionary):
+    return dict(find_minimum(key, v) for key, v in dictionary.items())
+
+print(find_minimum_dict(dictionary_to_compare))
 
 for x in jobs_over_x_hours:
     print(x.job + " is leftover")
